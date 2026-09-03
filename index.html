@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TomaAPI — Godot 4 Game Framework</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #0D1117;
+  color: #E6EDF3;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #0D1117cc;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #21262D;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #58A6FF;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  color: #8B949E;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: #E6EDF3; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, #1F6FEB18 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #58A6FF;
+  background: #1F6FEB18;
+  border: 1px solid #1F6FEB44;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  color: #E6EDF3;
+}
+
+.hero h1 span { color: #58A6FF; }
+
+.hero-sub {
+  font-size: 17px;
+  color: #8B949E;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.btn-group {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: #1F6FEB;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn-primary:hover { background: #388BFD; transform: translateY(-1px); }
+
+.btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: #E6EDF3;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: 1px solid #30363D;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.btn-secondary:hover { border-color: #58A6FF; color: #58A6FF; transform: translateY(-1px); }
+
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  padding: 48px 24px;
+  border-top: 1px solid #21262D;
+  border-bottom: 1px solid #21262D;
+  flex-wrap: wrap;
+}
+
+.stat-item { text-align: center; }
+
+.stat-num {
+  font-size: 32px;
+  font-weight: 700;
+  color: #58A6FF;
+  letter-spacing: -0.5px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #8B949E;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 4px;
+}
+
+/* FEATURES */
+.features {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.section-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #58A6FF;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #E6EDF3;
+  margin-bottom: 12px;
+}
+
+.section-sub {
+  text-align: center;
+  font-size: 14px;
+  color: #8B949E;
+  max-width: 480px;
+  margin: 0 auto 56px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.feature-card {
+  background: #161B22;
+  border: 1px solid #21262D;
+  border-radius: 10px;
+  padding: 24px;
+  transition: border-color 0.15s;
+}
+
+.feature-card:hover { border-color: #30363D; }
+
+.feature-icon {
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+
+.feature-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #E6EDF3;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  font-size: 13px;
+  color: #8B949E;
+  line-height: 1.6;
+}
+
+.feature-card .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #3FB950;
+  background: #3FB95018;
+  border: 1px solid #3FB95033;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+/* CODE PREVIEW */
+.code-section {
+  background: #161B22;
+  border-top: 1px solid #21262D;
+  border-bottom: 1px solid #21262D;
+  padding: 80px 24px;
+}
+
+.code-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.code-inner .section-label { text-align: left; }
+.code-inner .section-title { text-align: left; font-size: 26px; margin-bottom: 6px; }
+.code-inner .section-sub { text-align: left; margin: 0 0 28px; }
+
+pre {
+  background: #0D1117;
+  border: 1px solid #21262D;
+  border-left: 3px solid #58A6FF;
+  border-radius: 8px;
+  padding: 24px 28px;
+  overflow-x: auto;
+  font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.kw  { color: #FF7B72; }
+.kw2 { color: #79C0FF; }
+.fn  { color: #D2A8FF; }
+.num { color: #F2CC60; }
+.cmt { color: #8B949E; font-style: italic; }
+.ns  { color: #58A6FF; }
+.atr { color: #79C0FF; }
+.punc { color: #E6EDF3; }
+.var { color: #E6EDF3; }
+.param { color: #FFA657; }
+
+/* CTA */
+.cta {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.cta h2 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.cta p {
+  font-size: 14px;
+  color: #8B949E;
+  margin-bottom: 32px;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid #21262D;
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+footer span { font-size: 12px; color: #8B949E; }
+footer a { font-size: 12px; color: #8B949E; text-decoration: none; }
+footer a:hover { color: #58A6FF; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">TomaAPI</a>
+  <ul class="nav-links">
+    <li><a href="installation.html">Docs</a></li>
+    <li><a href="https://tomagtk.itch.io/tomaapi" target="_blank">itch.io</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Godot 4 · C# · Open World Ready</div>
+  <h1>Build games faster<br>with <span>TomaAPI</span></h1>
+  <p class="hero-sub">A C# framework built on top of Godot 4. Skip the boilerplate — character control, cameras, chunk streaming, mod support, and more, all in one line of code.</p>
+  <div class="btn-group">
+    <a href="installation.html" class="btn-primary">Get Started</a>
+    <a href="https://tomagtk.itch.io/tomaapi" target="_blank" class="btn-secondary">Get it on itch.io</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-num">C#</div>
+    <div class="stat-label">Faster than GDScript</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">1 line</div>
+    <div class="stat-label">Per feature</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">Unique</div>
+    <div class="stat-label">Mod support in Godot</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">0</div>
+    <div class="stat-label">Royalties</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-label">What's included</div>
+  <div class="section-title">Everything you need</div>
+  <p class="section-sub">Stop rebuilding the same systems for every project. TomaAPI gives you the hard parts, ready to use.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎮</div>
+      <h3>CharacterController</h3>
+      <p>Full player movement with walking, sprinting, and jumping. Two movement styles — strafe or directional facing.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📷</div>
+      <h3>TPP</h3>
+      <p>Third-person camera with collision, mouse look, and smooth alignment. Two styles to match any game feel.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Chunk Streaming</h3>
+      <p>Load and unload world chunks at runtime. Build open world games without worrying about memory or performance.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <h3>Pathfinder</h3>
+      <p>3D pathfinding that returns a Vector3 direction. Includes built-in stuck detection so NPCs never freeze.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧩</div>
+      <h3>Mod Support</h3>
+      <p>The only Godot framework with true DLL-based mod loading. Full API access for modders, with a built-in security sandbox.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Mod Security</h3>
+      <p>Mods are scanned before loading. Dangerous namespaces are blocked. Crashed mods are disabled automatically — the game keeps running.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎒</div>
+      <h3>Inventory</h3>
+      <p>Ready-to-use inventory system. Plug it in and start adding items.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">❤️</div>
+      <h3>Health System</h3>
+      <p>Health and HealthExtensions — a complete health system with extension support for custom mechanics.</p>
+      <span class="tag">STABLE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Save System</h3>
+      <p>Built-in save and load. No setup required.</p>
+      <span class="tag">STABLE</span>
+    </div>
+  </div>
+</section>
+
+<!-- CODE PREVIEW -->
+<section class="code-section">
+  <div class="code-inner">
+    <div class="section-label">Simple API</div>
+    <div class="section-title">One line per feature</div>
+    <p class="section-sub">No configuration files. No setup classes. Just call the method and it works.</p>
+    <pre><span class="cmt">// Full third-person player setup</span>
+<span class="kw">public override void</span> <span class="fn">_Ready</span><span class="punc">()</span>
+<span class="punc">{</span>
+    <span class="kw2">CharacterController</span><span class="punc">.</span><span class="var">Sprint</span> <span class="punc">=</span> <span class="kw">true</span><span class="punc">;</span>
+    <span class="kw2">CharacterController</span><span class="punc">.</span><span class="var">SprintSpeed</span> <span class="punc">=</span> <span class="var">SprintSpeed</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="kw">public override void</span> <span class="fn">_PhysicsProcess</span><span class="punc">(</span><span class="kw2">double</span> <span class="param">delta</span><span class="punc">)</span>
+<span class="punc">{</span>
+    <span class="kw2">CharacterController</span><span class="punc">.</span><span class="fn">Update</span><span class="punc">(</span><span class="kw">this</span><span class="punc">,</span> <span class="var">Speed</span><span class="punc">,</span> <span class="var">JumpHeight</span><span class="punc">,</span> <span class="var">delta</span><span class="punc">,</span> <span class="var">camera</span><span class="punc">,</span> <span class="kw2">MovementStyle</span><span class="punc">.</span><span class="var">General</span><span class="punc">);</span>
+    <span class="kw2">TPP</span><span class="punc">.</span><span class="fn">Align</span><span class="punc">(</span><span class="kw">this</span><span class="punc">,</span> <span class="var">camera</span><span class="punc">,</span> <span class="num">10.0f</span><span class="punc">,</span> <span class="var">delta</span><span class="punc">,</span> <span class="kw2">MovementStyle</span><span class="punc">.</span><span class="var">General</span><span class="punc">);</span>
+    <span class="kw2">TPP</span><span class="punc">.</span><span class="fn">EnableCollision</span><span class="punc">(</span><span class="var">camera</span><span class="punc">,</span> <span class="kw">this</span><span class="punc">);</span>
+    <span class="kw2">TPP</span><span class="punc">.</span><span class="fn">Update</span><span class="punc">(</span><span class="var">camera</span><span class="punc">,</span> <span class="kw">this</span><span class="punc">,</span> <span class="param">delta</span><span class="punc">:</span> <span class="var">delta</span><span class="punc">);</span>
+<span class="punc">}</span></pre>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Ready to build?</h2>
+  <p>Buy once. Use in any project. No royalties.</p>
+  <div class="btn-group">
+    <a href="https://tomagtk.itch.io/tomaapi" target="_blank" class="btn-primary">Get TomaAPI on itch.io</a>
+    <a href="installation.html" class="btn-secondary">Read the Docs</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Korng Toma · TomaAPI</span>
+  <a href="https://tomagtk.itch.io/tomaapi" target="_blank">itch.io</a>
+</footer>
+
+</body>
+</html>
