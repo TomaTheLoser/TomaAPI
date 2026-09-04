@@ -3,6 +3,7 @@ const NAV_ITEMS = [
   { href: 'character-controller.html', label: 'CharacterController', section: 'Features' },
   { href: 'tpp.html', label: 'TPP' },
   { href: 'pathfinder.html', label: 'PathFind' },
+  { href: 'graphics.html', label: 'Graphics', section: 'Rendering' },
 ];
 
 (function () {
