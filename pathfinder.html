@@ -84,6 +84,11 @@ tr:nth-child(even) td { background: #0D1117; }
   <tr><td><code>agent</code></td><td><code>NavigationAgent3D</code></td><td>The NavigationAgent3D attached to your NPC</td></tr>
 </table>
 
+<h2>Optional Properties</h2>
+<p>These can be set before calling <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>Init()</code>. Set both to the same value:</p>
+<pre><span class='var'>_Agent</span><span class='punc'>.</span><span class='var'>DesireDistance</span> <span class='punc'>=</span> <span class='num'>20.0f</span><span class='punc'>;</span>
+<span class='var'>_Agent</span><span class='punc'>.</span><span class='var'>TargetDesireDistance</span> <span class='punc'>=</span> <span class='num'>20.0f</span><span class='punc'>;</span></pre>
+
 <h2>Update</h2>
 <p>Call this every physics frame inside <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_PhysicsProcess()</code>:</p>
 <pre><span class='var'>_Agent</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>();</span></pre>
