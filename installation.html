@@ -63,17 +63,7 @@ tr:nth-child(even) td { background: #0D1117; }
   <span class="topbar-title">TomaAPI</span>
 </div>
 
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <h1>TomaAPI</h1>
-    <span>Godot 4 · C# · v1.0</span>
-  </div>
-  <div class="nav-section">Getting Started</div>
-  <a class="nav-link active" href="installation.html">Installation</a>
-  <div class="nav-section">Features</div>
-  <a class="nav-link " href="character-controller.html">CharacterController</a>
-  <a class="nav-link " href="tpp.html">TPP</a>
-</nav>
+<nav class="sidebar" id="sidebar"></nav>
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 <main class="main">
 
@@ -95,14 +85,6 @@ tr:nth-child(even) td { background: #0D1117; }
 <p>You are ready to use TomaAPI. Pick a feature from the sidebar to get started.</p>
 
 </main>
-<script>
-function openSidebar() {
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('open');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('open');
-}</script>
+<script src="nav.js"></script>
 </body>
 </html>
