@@ -1,11 +1,8 @@
-// TomaAPI Navigation — edit this file to add new pages
-// Each entry: { href: 'filename.html', label: 'Display Name', section: 'Section Header' }
-// section is optional — only set it on the FIRST item of a new section
-
 const NAV_ITEMS = [
   { href: 'installation.html', label: 'Installation', section: 'Getting Started' },
   { href: 'character-controller.html', label: 'CharacterController', section: 'Features' },
   { href: 'tpp.html', label: 'TPP' },
+  { href: 'pathfinder.html', label: 'PathFind' },
 ];
 
 (function () {
