@@ -66,45 +66,64 @@ tr:nth-child(even) td { background: #0D1117; }
 <nav class="sidebar" id="sidebar"></nav>
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 <main class="main">
-
-<div class='page-title'>CharacterController <span class='badge'>STABLE</span></div>
+<div class='page-title'>CharacterController <span class="badge">STABLE</span></div>
 <div class='page-subtitle'>Handles all player movement — walking, sprinting, and jumping.</div>
+
 <div class='tip'><strong>Pairing required:</strong> CharacterController must use the same <code style='color:#F2CC60;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>MovementStyle</code> as your TPP setup. Mismatched styles will cause incorrect movement.</div>
+
 <h2>Movement Styles</h2>
 <p><strong style='color:#E6EDF3;'>MovementStyle.Default</strong> — the character can move in all directions freely. Forward, backward, left, and right are all independent.</p>
 <p><strong style='color:#E6EDF3;'>MovementStyle.General</strong> — the character always faces the direction it is moving. Only a single walk animation is needed — no backward or strafe animations required.</p>
-<h2>Properties</h2>
-<p>Declare these on your <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>CharacterBody3D</code> script:</p>
+
+<h2>Setup</h2>
+<p>Create an instance and assign properties in <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_Ready()</code>:</p>
+<pre><span class='kw'>public</span> <span class='kw2'>CharacterController</span> <span class='var'>controller</span> <span class='punc'>=</span> <span class='kw'>new</span> <span class='kw2'>CharacterController</span><span class='punc'>();</span>
+
+<span class='kw'>public override void</span> <span class='fn'>_Ready</span><span class='punc'>()</span>
+<span class='punc'>{</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>camera</span> <span class='punc'>=</span> <span class='var'>camera</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>Self</span> <span class='punc'>=</span> <span class='kw'>this</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>speed</span> <span class='punc'>=</span> <span class='var'>Speed</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>JumpHeight</span> <span class='punc'>=</span> <span class='var'>JumpHeight</span><span class='punc'>;</span>
+    <span class='cmt'>// Enable Sprint</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>Sprint</span> <span class='punc'>=</span> <span class='kw'>true</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>SprintSpeed</span> <span class='punc'>=</span> <span class='var'>SprintSpeed</span><span class='punc'>;</span>
+<span class='punc'>}</span></pre>
+
+<table>
+  <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+  <tr><td><code>Self</code></td><td><code>CharacterBody3D</code></td><td>Your player node</td></tr>
+  <tr><td><code>camera</code></td><td><code>Camera3D</code></td><td>Your camera node</td></tr>
+  <tr><td><code>speed</code></td><td><code>float</code></td><td>Walk speed</td></tr>
+  <tr><td><code>JumpHeight</code></td><td><code>float</code></td><td>Jump force</td></tr>
+  <tr><td><code>Sprint</code></td><td><code>bool</code></td><td>Enable or disable sprint</td></tr>
+  <tr><td><code>SprintSpeed</code></td><td><code>float</code></td><td>Speed when sprinting</td></tr>
+</table>
+
+<h2>Update</h2>
+<p>Call this every physics frame:</p>
+<pre><span class='var'>controller</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span></pre>
+
+<h2>Full Example</h2>
 <pre><span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>float</span> <span class='var'>Speed</span> <span class='punc'>=</span> <span class='num'>6.0f</span><span class='punc'>;</span>
 <span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>float</span> <span class='var'>SprintSpeed</span> <span class='punc'>=</span> <span class='num'>8.0f</span><span class='punc'>;</span>
 <span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>float</span> <span class='var'>JumpHeight</span> <span class='punc'>=</span> <span class='num'>4.0f</span><span class='punc'>;</span>
-<span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>Camera3D</span> <span class='var'>camera</span><span class='punc'>;</span></pre>
-<h2>Enable Sprint</h2>
-<pre><span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='var'>Sprint</span> <span class='punc'>=</span> <span class='kw'>true</span><span class='punc'>;</span>
-<span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='var'>SprintSpeed</span> <span class='punc'>=</span> <span class='var'>SprintSpeed</span><span class='punc'>;</span></pre>
-<h2>Update Movement</h2>
-<pre><span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='kw'>this</span><span class='punc'>,</span> <span class='var'>Speed</span><span class='punc'>,</span> <span class='var'>JumpHeight</span><span class='punc'>,</span> <span class='var'>delta</span><span class='punc'>,</span> <span class='var'>camera</span><span class='punc'>,</span>
-    <span class='ns'>Toma.Behavior</span><span class='punc'>.</span><span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span></pre>
-<table>
-  <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-  <tr><td><code>this</code></td><td><code>CharacterBody3D</code></td><td>Your player node</td></tr>
-  <tr><td><code>Speed</code></td><td><code>float</code></td><td>Walk speed</td></tr>
-  <tr><td><code>JumpHeight</code></td><td><code>float</code></td><td>Jump force</td></tr>
-  <tr><td><code>delta</code></td><td><code>double</code></td><td>Physics delta time</td></tr>
-  <tr><td><code>camera</code></td><td><code>Camera3D</code></td><td>Your camera node</td></tr>
-  <tr><td><code>MovementStyle</code></td><td><code>enum</code></td><td>Default — all directions. General — faces movement direction.</td></tr>
-</table>
-<h2>Full Example</h2>
-<pre><span class='kw'>public override void</span> <span class='fn'>_Ready</span><span class='punc'>()</span>
+<span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>Camera3D</span> <span class='var'>camera</span><span class='punc'>;</span>
+<span class='kw'>public</span> <span class='kw2'>CharacterController</span> <span class='var'>controller</span> <span class='punc'>=</span> <span class='kw'>new</span> <span class='kw2'>CharacterController</span><span class='punc'>();</span>
+
+<span class='kw'>public override void</span> <span class='fn'>_Ready</span><span class='punc'>()</span>
 <span class='punc'>{</span>
-    <span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='var'>Sprint</span> <span class='punc'>=</span> <span class='kw'>true</span><span class='punc'>;</span>
-    <span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='var'>SprintSpeed</span> <span class='punc'>=</span> <span class='var'>SprintSpeed</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>camera</span> <span class='punc'>=</span> <span class='var'>camera</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>Self</span> <span class='punc'>=</span> <span class='kw'>this</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>speed</span> <span class='punc'>=</span> <span class='var'>Speed</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>JumpHeight</span> <span class='punc'>=</span> <span class='var'>JumpHeight</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>Sprint</span> <span class='punc'>=</span> <span class='kw'>true</span><span class='punc'>;</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='var'>SprintSpeed</span> <span class='punc'>=</span> <span class='var'>SprintSpeed</span><span class='punc'>;</span>
 <span class='punc'>}</span>
 
 <span class='kw'>public override void</span> <span class='fn'>_PhysicsProcess</span><span class='punc'>(</span><span class='kw2'>double</span> <span class='param'>delta</span><span class='punc'>)</span>
 <span class='punc'>{</span>
-    <span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='kw'>this</span><span class='punc'>,</span> <span class='var'>Speed</span><span class='punc'>,</span> <span class='var'>JumpHeight</span><span class='punc'>,</span> <span class='var'>delta</span><span class='punc'>,</span> <span class='var'>camera</span><span class='punc'>,</span>
-        <span class='ns'>Toma.Behavior</span><span class='punc'>.</span><span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span>
+    <span class='var'>controller</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span>
 <span class='punc'>}</span></pre>
 
 </main>

@@ -66,51 +66,72 @@ tr:nth-child(even) td { background: #0D1117; }
 <nav class="sidebar" id="sidebar"></nav>
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 <main class="main">
+<div class='page-title'>TPP <span class="badge">STABLE</span></div>
+<div class='page-subtitle'>Third-person camera system. Handles alignment, collision, and mouse look.</div>
 
-<div class='page-title'>TPP <span class='badge'>STABLE</span></div>
-<div class='page-subtitle'>Third-person camera system. Handles alignment, collision, mouse look, and position updates.</div>
 <div class='tip'><strong>Pairing required:</strong> TPP must use the same <code style='color:#F2CC60;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>MovementStyle</code> as your CharacterController. Mismatched styles will cause incorrect movement.</div>
+
 <h2>Movement Styles</h2>
 <p><strong style='color:#E6EDF3;'>MovementStyle.Default</strong> — the character can move in all directions freely. Forward, backward, left, and right are all independent.</p>
 <p><strong style='color:#E6EDF3;'>MovementStyle.General</strong> — the character always faces the direction it is moving. Only a single walk animation is needed — no backward or strafe animations required.</p>
+
+<h2>Setup</h2>
+<p>Create an instance and assign properties in <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_Ready()</code>:</p>
+<pre><span class='kw'>public</span> <span class='kw2'>TPP</span> <span class='var'>_TPP</span> <span class='punc'>=</span> <span class='kw'>new</span> <span class='kw2'>TPP</span><span class='punc'>();</span>
+
+<span class='kw'>public override void</span> <span class='fn'>_Ready</span><span class='punc'>()</span>
+<span class='punc'>{</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='var'>Self</span> <span class='punc'>=</span> <span class='kw'>this</span><span class='punc'>;</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='var'>camera</span> <span class='punc'>=</span> <span class='var'>camera</span><span class='punc'>;</span>
+<span class='punc'>}</span></pre>
+
+<table>
+  <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+  <tr><td><code>Self</code></td><td><code>CharacterBody3D</code></td><td>Your player node</td></tr>
+  <tr><td><code>camera</code></td><td><code>Camera3D</code></td><td>Your camera node</td></tr>
+</table>
+
 <h2>Align Camera</h2>
-<p>Smoothly moves the camera behind the character. The third parameter controls how fast it snaps:</p>
-<pre><span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>Align</span><span class='punc'>(</span><span class='kw'>this</span><span class='punc'>,</span> <span class='var'>camera</span><span class='punc'>,</span> <span class='num'>10.0f</span><span class='punc'>,</span> <span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span></pre>
-<h2>Enable Collision</h2>
-<p>Prevents the camera from clipping through walls and objects:</p>
-<pre><span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>EnableCollision</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='kw'>this</span><span class='punc'>);</span></pre>
+<p>Smoothly moves the camera behind the character. Call in <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_PhysicsProcess()</code>:</p>
+<pre><span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Align</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span></pre>
+
 <h2>Update Camera</h2>
-<pre><span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='kw'>this</span><span class='punc'>,</span> <span class='param'>delta</span><span class='punc'>:</span> <span class='var'>delta</span><span class='punc'>);</span></pre>
+<p>Updates the camera position every frame:</p>
+<pre><span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>);</span></pre>
+
+<h2>Enable Collision</h2>
+<p>Prevents the camera from clipping through walls. Call after Update:</p>
+<pre><span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Update_Collision</span><span class='punc'>();</span></pre>
+
 <h2>Mouse Look</h2>
 <p>Call inside <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_Input()</code>:</p>
-<pre><span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>EnableMouse</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='var'>mouse</span><span class='punc'>,</span> <span class='param'>sensitivityX</span><span class='punc'>:</span> <span class='num'>0.4f</span><span class='punc'>,</span> <span class='param'>sensitivityY</span><span class='punc'>:</span> <span class='num'>0.4f</span><span class='punc'>);</span></pre>
+<pre><span class='kw'>if</span> <span class='punc'>(</span><span class='param'>@event</span> <span class='kw'>is</span> <span class='kw2'>InputEventMouseMotion</span> <span class='var'>mouse</span><span class='punc'>)</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Mouse_Event</span><span class='punc'>(</span><span class='var'>mouse</span><span class='punc'>);</span></pre>
+
 <h2>Full Example</h2>
-<pre><span class='kw'>public override void</span> <span class='fn'>_PhysicsProcess</span><span class='punc'>(</span><span class='kw2'>double</span> <span class='param'>delta</span><span class='punc'>)</span>
+<pre><span class='atr'>[Export]</span> <span class='kw'>public</span> <span class='kw2'>Camera3D</span> <span class='var'>camera</span><span class='punc'>;</span>
+<span class='kw'>public</span> <span class='kw2'>TPP</span> <span class='var'>_TPP</span> <span class='punc'>=</span> <span class='kw'>new</span> <span class='kw2'>TPP</span><span class='punc'>();</span>
+
+<span class='kw'>public override void</span> <span class='fn'>_Ready</span><span class='punc'>()</span>
 <span class='punc'>{</span>
-    <span class='fn'>Controller</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>);</span>
-    <span class='fn'>Third_person_camera</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>);</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='var'>Self</span> <span class='punc'>=</span> <span class='kw'>this</span><span class='punc'>;</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='var'>camera</span> <span class='punc'>=</span> <span class='var'>camera</span><span class='punc'>;</span>
 <span class='punc'>}</span>
 
-<span class='kw'>void</span> <span class='fn'>Controller</span><span class='punc'>(</span><span class='kw2'>double</span> <span class='param'>delta</span><span class='punc'>)</span>
+<span class='kw'>public override void</span> <span class='fn'>_PhysicsProcess</span><span class='punc'>(</span><span class='kw2'>double</span> <span class='param'>delta</span><span class='punc'>)</span>
 <span class='punc'>{</span>
-    <span class='cmt'>// Must use the same MovementStyle as TPP</span>
-    <span class='kw2'>CharacterController</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='kw'>this</span><span class='punc'>,</span> <span class='var'>Speed</span><span class='punc'>,</span> <span class='var'>JumpHeight</span><span class='punc'>,</span> <span class='var'>delta</span><span class='punc'>,</span> <span class='var'>camera</span><span class='punc'>,</span>
-        <span class='ns'>Toma.Behavior</span><span class='punc'>.</span><span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span>
-<span class='punc'>}</span>
-
-<span class='kw'>void</span> <span class='fn'>Third_person_camera</span><span class='punc'>(</span><span class='kw2'>double</span> <span class='param'>delta</span><span class='punc'>)</span>
-<span class='punc'>{</span>
-    <span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>Align</span><span class='punc'>(</span><span class='kw'>this</span><span class='punc'>,</span> <span class='var'>camera</span><span class='punc'>,</span> <span class='num'>10.0f</span><span class='punc'>,</span> <span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span>
-    <span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>EnableCollision</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='kw'>this</span><span class='punc'>);</span>
-    <span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='kw'>this</span><span class='punc'>,</span> <span class='param'>delta</span><span class='punc'>:</span> <span class='var'>delta</span><span class='punc'>);</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Align</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>,</span> <span class='kw2'>MovementStyle</span><span class='punc'>.</span><span class='var'>General</span><span class='punc'>);</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Update</span><span class='punc'>(</span><span class='var'>delta</span><span class='punc'>);</span>
+    <span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Update_Collision</span><span class='punc'>();</span>
 <span class='punc'>}</span>
 
 <span class='kw'>public override void</span> <span class='fn'>_Input</span><span class='punc'>(</span><span class='kw2'>InputEvent</span> <span class='param'>@event</span><span class='punc'>)</span>
 <span class='punc'>{</span>
     <span class='kw'>if</span> <span class='punc'>(</span><span class='param'>@event</span> <span class='kw'>is</span> <span class='kw2'>InputEventMouseMotion</span> <span class='var'>mouse</span><span class='punc'>)</span>
-        <span class='kw2'>TPP</span><span class='punc'>.</span><span class='fn'>EnableMouse</span><span class='punc'>(</span><span class='var'>camera</span><span class='punc'>,</span> <span class='var'>mouse</span><span class='punc'>,</span> <span class='param'>sensitivityX</span><span class='punc'>:</span> <span class='num'>0.4f</span><span class='punc'>,</span> <span class='param'>sensitivityY</span><span class='punc'>:</span> <span class='num'>0.4f</span><span class='punc'>);</span>
+        <span class='var'>_TPP</span><span class='punc'>.</span><span class='fn'>Mouse_Event</span><span class='punc'>(</span><span class='var'>mouse</span><span class='punc'>);</span>
 <span class='punc'>}</span></pre>
-<div class='note'><strong>Note:</strong> Always call EnableCollision and Update together. Skipping either one will cause incorrect camera behavior.</div>
+
+<div class='note'><strong>Note:</strong> Always call Update_Collision after Update. Skipping it will cause the camera to clip through walls.</div>
 
 </main>
 <script src="nav.js"></script>
