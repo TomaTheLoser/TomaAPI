@@ -4,6 +4,7 @@ const NAV_ITEMS = [
   { href: 'tpp.html', label: 'TPP' },
   { href: 'pathfinder.html', label: 'PathFind' },
   { href: 'graphics.html', label: 'Graphics', section: 'Rendering' },
+  { href: 'chunks.html', label: 'Chunks', section: 'World' },
 ];
 
 (function () {
