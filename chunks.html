@@ -98,6 +98,13 @@ tr:nth-child(even) td { background: #0D1117; }
   <tr><td><code>Distance</code></td><td><code>float</code></td><td>Distance in units beyond which the chunk unloads. Default: <code>20.0</code></td></tr>
 </table>
 
+<h2>Preloading <span class='badge'>Optional</span></h2>
+<p>Preloading lets the chunk start loading in the background before the player arrives, so it appears instantly with no pop-in. To enable it, add these two lines in <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>_Ready()</code> after the standard setup:</p>
+<pre><span class='cmt'>// Enable Preload and the Preload distance must bigger than the Distance</span>
+<span class='var'>_Chunk</span><span class='punc'>.</span><span class='var'>EnablePreLoad_Chunk</span> <span class='punc'>=</span> <span class='kw'>true</span><span class='punc'>;</span>
+<span class='var'>_Chunk</span><span class='punc'>.</span><span class='var'>PreLoad_Distance</span> <span class='punc'>=</span> <span class='var'>PreLoadChunkDistance</span><span class='punc'>;</span></pre>
+<div class='note'><strong>Note:</strong> <code style='color:#3FB950;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>PreLoad_Distance</code> must always be greater than <code style='color:#3FB950;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>ChunkDistance</code>. The chunk loads silently in the background at the preload radius and appears the moment the player crosses the appear distance.</div>
+
 <h2>Multiple Chunks</h2>
 <p>Each <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>Chunk</code> instance handles exactly one scene file. To stream several chunks independently, add one <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>chunks</code> node per scene with its own <code style='color:#79C0FF;background:#161B22;padding:2px 6px;border-radius:3px;font-size:12px;'>LocationNode</code> placed at that chunk's world position:</p>
 <pre><span class='cmt'>// Node tree example</span>
